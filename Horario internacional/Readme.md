@@ -3,5 +3,6 @@ Se muestra en un vídeo como funciona este archivo excel para generar un horario
 Para ello, a partir de una fecha y un horario laboral, genera las diferentes horas de cada ciudad a través de una macro.  
 Además, un sistema de colores facilita la lectura.  
 
-![Preview del horario]([url_de_la_image](https://raw.githubusercontent.com/isromar/Excel/main/Horario%20internacional/preview.jpg)n)
+![Preview del horario](https://raw.githubusercontent.com/isromar/Excel/main/Horario%20internacional/preview.jpg)
+
 

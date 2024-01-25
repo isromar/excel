@@ -5,7 +5,9 @@ Para ello, a partir de una fecha y un horario laboral, genera las diferentes hor
 Además, un sistema de colores facilita la lectura.
 
 ## English
-In the video, it is shown how this Excel file works to generate a schedule that aims to find compatible hours between different cities around the world, for example, to hold a joint meeting and be able to coincide in time between the different cities. To do this, based on a date and a work schedule, it generates the different hours for each city through a macro. In addition, a color system facilitates reading
+In the video, it is shown how this Excel file works to generate a schedule that aims to find compatible hours between different cities around the world, for example, to hold a joint meeting and be able to coincide in time between the different cities.  
+So, based on a date and a work schedule, it generates the different hours for each city through a macro.  
+In addition, a color system facilitates reading
 
 ## Image preview
 ![Preview del horario](https://raw.githubusercontent.com/isromar/Excel/main/Horario%20internacional/preview.jpg)

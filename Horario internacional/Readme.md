@@ -10,6 +10,6 @@ So, based on a date and a work schedule, it generates the different hours for ea
 In addition, a color system facilitates reading
 
 ## Image preview
-![Preview del horario](https://raw.githubusercontent.com/isromar/Excel/main/horario%20internacional/preview.jpg)
+![Preview](https://raw.githubusercontent.com/isromar/excel/main/horario%20internacional/preview.jpg)
 
 

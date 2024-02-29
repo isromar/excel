@@ -12,5 +12,5 @@ In addition, a color system facilitates reading
 ## Image preview
 ![Preview](https://raw.githubusercontent.com/isromar/excel/main/Horario%20internacional/preview.jpg)
 
-## Link to video
+## How it works
 [Video](https://youtu.be/mYfHo7veCEA)

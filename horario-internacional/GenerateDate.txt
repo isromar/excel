@@ -1,0 +1,382 @@
+Sub GenerateDate()
+'
+' Description: Macro to generate a calendar for different cities
+' Author: Isabel Ródenas Marín
+'
+
+    Dim dia As Integer
+    Dim mes As String
+    Dim anio As Integer
+    Dim fecha As Date
+    Dim fechaSinDST
+    Dim hora As Date
+    Dim i As Integer
+    Dim rango As Range
+    Dim valor As Variant
+    Dim valores() As String
+    Dim freeDays() As String
+    ReDim freeDays(1)
+    Dim fechaInicioVerano As Date
+    Dim fechaFinVerano As Date
+    
+    dia = Range("B2").Value
+    mes = Range("C2").Value
+    anio = Range("D2").Value
+            
+    ' Validar que los campos Free days no estén vacíos
+    If Range("I2").Value = vbNullString Or Range("I3").Value = vbNullString Then
+        MsgBox "Free days can't be empty. If there is only one free day, choose the same for both cells"
+        Exit Sub
+    End If
+    
+    ' Validar que los campos Working hours no estén vacíos
+    If Range("F3").Value = vbNullTime Or Range("G3").Value = vbNullTime Then
+        MsgBox "Working hours can't be empty. Please choose some"
+        Exit Sub
+    End If
+   
+    ' Validar que los campos de día, mes y año no estén vacíos
+    If Not IsNumeric(dia) Or mes = vbNullString Or anio = vbNullNumeric Then
+        MsgBox "Please enter the appropriate values for the fields day, month, and year."
+        Exit Sub
+    End If
+    
+    ' Toma los días de trabajo de la semana
+    freeDays(0) = Range("I2").Value
+    freeDays(1) = Range("I3").Value
+        
+        
+    ' Convertir el nombre del mes a número de mes
+    Select Case mes
+        Case "January"
+            mesNum = 1
+        Case "February"
+            mesNum = 2
+        Case "March"
+            mesNum = 3
+        Case "April"
+            mesNum = 4
+        Case "May"
+            mesNum = 5
+        Case "June"
+            mesNum = 6
+        Case "July"
+            mesNum = 7
+        Case "August"
+            mesNum = 8
+        Case "September"
+            mesNum = 9
+        Case "October"
+            mesNum = 10
+        Case "November"
+            mesNum = 11
+        Case "December"
+            mesNum = 12
+    End Select
+    
+    ' Limpiar color de las celdas
+    For Each rango In Range("B11:M34")
+        rango.Interior.ColorIndex = xlNone
+    Next rango
+
+    ' Generar fechas para cada ciudad
+    For i = 0 To 23
+    
+        ' Actual en UTC+0
+        fecha = DateSerial(anio, mesNum, dia) + TimeSerial(i, 0, 0)
+        Range("A11").Offset(i, 0).Value = Format(fecha, "dddd, d mmmm yyyy, hh:mm")
+        
+        ' Ciudad de México (UTC-6)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 6, 0, 0)
+        fechaInicioVerano = Range("B6").Value
+        fechaFinVerano = Range("B7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("B8") = "Summer time"
+            Range("B9") = "UTC -5"
+        Else
+            Range("B8") = "Winter time"
+            Range("B9") = "UTC -6"
+        End If
+        Range("B11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+        
+        ' Toronto (UTC-5)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 5, 0, 0)
+        fechaInicioVerano = Range("C6").Value
+        fechaFinVerano = Range("C7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("C8") = "Summer time"
+            Range("C9") = "UTC -4"
+        Else
+            Range("C8") = "Winter time"
+            Range("C9") = "UTC -5"
+        End If
+        Range("C11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+        
+        ' New York (UTC-5)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 5, 0, 0)
+        fechaInicioVerano = Range("D6").Value
+        fechaFinVerano = Range("D7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("D8") = "Summer time"
+            Range("D9") = "UTC -4"
+        Else
+            Range("D8") = "Winter time"
+            Range("D9") = "UTC -5"
+        End If
+        Range("D11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+                
+        ' Sao Paulo (UTC-3)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 3, 0, 0)
+        fechaInicioVerano = Range("E6").Value
+        fechaFinVerano = Range("E7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("E8") = "Summer time"
+            Range("E9") = "UTC -2"
+        Else
+            Range("E8") = "Winter time"
+            Range("E9") = "UTC -3"
+        End If
+        Range("E11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+        
+        ' Rio de Janeiro (UTC-3)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 3, 0, 0)
+        fechaInicioVerano = Range("F6").Value
+        fechaFinVerano = Range("F7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("F8") = "Summer time"
+            Range("F9") = "UTC -2"
+        Else
+            Range("F8") = "Winter time"
+            Range("F9") = "UTC -3"
+        End If
+        Range("F11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+        
+        ' Londres (UTC+0)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i, 0, 0)
+        fechaInicioVerano = Range("G6").Value
+        fechaFinVerano = Range("G7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("G8") = "Summer time"
+            Range("G9") = "UTC +1"
+        Else
+            Range("G8") = "Winter time"
+            Range("G9") = "UTC"
+        End If
+        Range("G11").Offset(i, 0).Value = Format(fecha, "dddd d, hh:mm")
+                
+        ' Lisbon (UTC+0)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i, 0, 0)
+        fechaInicioVerano = Range("H6").Value
+        fechaFinVerano = Range("H7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("H8") = "Summer time"
+            Range("H9") = "UTC +1"
+        Else
+            Range("H8") = "Winter time"
+            Range("H9") = "UTC"
+        End If
+        Range("H11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+                        
+        ' Madrid (UTC+1)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 1, 0, 0)
+        fechaInicioVerano = Range("I6").Value
+        fechaFinVerano = Range("I7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("I8") = "Summer time"
+            Range("I9") = "UTC +2"
+        Else
+            Range("I8") = "Winter time"
+            Range("I9") = "UTC +1"
+        End If
+        Range("I11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+        
+        ' Barcelona (UTC+1)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 1, 0, 0)
+        fechaInicioVerano = Range("J6").Value
+        fechaFinVerano = Range("J7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("J8") = "Summer time"
+            Range("J9") = "UTC +2"
+        Else
+            Range("J8") = "Winter time"
+            Range("J9") = "UTC +1"
+        End If
+        Range("J11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+        
+        ' Milán (UTC+1)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 1, 0, 0)
+        fechaInicioVerano = Range("K6").Value
+        fechaFinVerano = Range("K7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("K8") = "Summer time"
+            Range("K9") = "UTC +2"
+        Else
+            Range("K8") = "Winter time"
+            Range("K9") = "UTC +1"
+        End If
+        Range("K11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+        
+        ' Copenhague (UTC+1)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 1, 0, 0)
+        fechaInicioVerano = Range("L6").Value
+        fechaFinVerano = Range("L7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("L8") = "Summer time"
+            Range("L9") = "UTC +2"
+        Else
+            Range("L8") = "Winter time"
+            Range("L9") = "UTC +1"
+        End If
+        Range("L11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+
+        ' Melbourne (UTC+11)
+        fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 11, 0, 0)
+        fechaInicioVerano = Range("M6").Value
+        fechaFinVerano = Range("M7").Value
+        fecha = checkIfSummer(fechaSinDST, fechaInicioVerano, fechaFinVerano)
+        If fechaSinDST <> fecha Then
+            Range("M8") = "Summer time"
+            Range("M9") = "UTC +11"
+        Else
+            Range("M8") = "Winter time"
+            Range("M9") = "UTC +10"
+        End If
+        Range("M11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
+        
+    Next i
+
+        ' Obtener la hora inicial y la hora final de las celdas
+        horaInicial = Range("F3").Value
+        horaFinal = Range("G3").Value
+        
+        ' Redimensionar el array para que tenga el tamaño necesario
+        ReDim valores(0 To DateDiff("h", horaInicial, horaFinal))
+        Range("C4") = valores
+        
+        ' Agregar las horas al array
+        For i = 0 To UBound(valores)
+            horaActual = DateAdd("h", i, horaInicial)
+            valores(i) = Format(horaActual, "hh:mm")
+        Next i
+        
+        ' Definir el array de valores a buscar
+        For Each celda In Range("B11:M34")
+            For Each valor In valores
+                If InStr(1, celda.Value, valor) > 0 Then
+                    celda.Interior.Color = RGB(144, 238, 144) ' Verde claro
+                End If
+            Next valor
+        Next celda
+        
+        Call changeDaysToEnglish("A11:M34")
+        Call changeMonthsToEnglish("A11:M34")
+        Call changeCellsColor("B11:M34", freeDays)
+                
+        MsgBox "Calendar generated"
+
+End Sub
+Sub changeCellsColor(rangeCells As String, freeDays() As String)
+    Dim celda As Range
+    Dim valor As Variant
+    
+    ' Recorrer el rango de celdas y aplicar el formato condicional
+    For Each celda In Range(rangeCells)
+        For Each valor In freeDays
+            If InStr(1, celda.Value, valor, vbTextCompare) > 0 Then
+                celda.Interior.Color = RGB(255, 192, 203) ' Rosa claro
+                Exit For
+            End If
+        Next valor
+    Next celda
+End Sub
+Sub changeDaysToEnglish(rangeCells As String)
+    Dim celda As Range
+    Dim weekDays() As Variant
+    weekDays = Array("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
+    
+    ' Recorrer el rango de celdas y cambiar los días encontrados
+    For Each celda In Range(rangeCells)
+        For i = LBound(weekDays) To UBound(weekDays)
+            If InStr(1, LCase(celda.Value), LCase(weekDays(i))) > 0 Then
+                Select Case LCase(weekDays(i))
+                    Case "lunes"
+                        celda.Value = Replace(celda.Value, LCase(weekDays(i)), "Monday")
+                    Case "martes"
+                        celda.Value = Replace(celda.Value, LCase(weekDays(i)), "Tuesday")
+                    Case "miércoles"
+                        celda.Value = Replace(celda.Value, LCase(weekDays(i)), "Wednesday")
+                    Case "jueves"
+                        celda.Value = Replace(celda.Value, LCase(weekDays(i)), "Thursday")
+                    Case "viernes"
+                        celda.Value = Replace(celda.Value, LCase(weekDays(i)), "Friday")
+                    Case "sábado"
+                        celda.Value = Replace(celda.Value, LCase(weekDays(i)), "Saturday")
+                    Case "domingo"
+                        celda.Value = Replace(celda.Value, LCase(weekDays(i)), "Sunday")
+                End Select
+                Exit For
+            End If
+        Next i
+    Next celda
+End Sub
+Sub changeMonthsToEnglish(rangeCells As String)
+    Dim celda As Range
+    Dim monthNames() As Variant
+    monthNames = Array("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
+    
+    ' Recorrer el rango de celdas y cambiar los días encontrados
+    For Each celda In Range(rangeCells)
+        For i = LBound(monthNames) To UBound(monthNames)
+            If InStr(1, LCase(celda.Value), LCase(monthNames(i))) > 0 Then
+                Select Case LCase(monthNames(i))
+                    Case "enero"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "January")
+                    Case "febrero"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "February")
+                    Case "marzo"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "March")
+                    Case "abril"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "April")
+                    Case "mayo"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "May")
+                    Case "junio"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "June")
+                    Case "julio"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "July")
+                    Case "agosto"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "August")
+                    Case "septiembre"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "September")
+                    Case "octubre"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "October")
+                    Case "noviembre"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "November")
+                    Case "diciembre"
+                        celda.Value = Replace(celda.Value, LCase(monthNames(i)), "December")
+                End Select
+                Exit For
+            End If
+        Next i
+    Next celda
+End Sub
+Function checkIfSummer(fecha, fechaInicioVerano, fechaFinVerano)
+   
+    ' Verificar si la fecha está dentro del horario de verano
+    If fecha >= fechaInicioVerano And fecha < fechaFinVerano Then
+        ' Ajustar la hora para el horario de verano (UTC-6)
+    checkIfSummer = DateAdd("h", i + 1, fecha)
+    Else
+        checkIfSummer = fecha
+    End If
+End Function

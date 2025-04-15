@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimaciones de Contagios por COVID-19 en 2020</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Estimación de contagios por covid durante el confinamiento</h1>
+        <h5>
+            Mi pasión por los números me llevó a crear modelos predictivos que estimasen la evolución de los contagios.
+            <br>
+            Basándome en datos oficiales, tanto de España como de Italia, hacía las predicciones un día antes y
+            luego comparaba mi predicción con los datos oficiales publicados al día siguiente.
+            <br>
+        </h5>
+        <h6>
+            La gráfica muestra con rombos los datos oficiales que se iban publicando cada día de confinamiento y la línea muestra mi ajuste de la curva a dichos datos para poder predecir los casos futuros.
+            <br>
+            La tabla muestra la predicción que hice al ajustar dicha curva, de modo que cada día pronosticaba los contagios que habría el día siguiente, el error muestra la desviación de mi predicción con respecto a los datos reales publicados.
+        </h6>
+
+        <h3 class="text-center">Casos acumulados de coronavirus 2020-04-09</h4>
+        <div class="row">
+            <div class="col-8">
+                <img src="images/2020-04-09.jpg" alt="Gráfica de Contagios" class="grafica">
+            </div>
+            <div class="col-4">
+
+
+                <table class="table table-striped table-bordered">
+                    <thead class="table-success">
+                        <tr>
+                            <th>País</th>
+                            <th>Casos pronosticados</th>
+                            <th>Casos publicados</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>España</td>
+                            <td>149.937</td>
+                            <td>157.022</td>
+                            <td>4.41%</td>
+                        </tr>
+
+                        <tr>
+                            <td>Italia</td>
+                            <td>143.092</td>
+                            <td>147.577</td>
+                            <td>3.03%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <h3 class="text-center">Casos acumulados de coronavirus 2020-04-07</h4>
+        <div class="row">
+            <div class="col-8">
+                <img src="images/2020-04-07.jpg" alt="Gráfica de Contagios" class="grafica">
+            </div>
+            <div class="col-4">
+
+
+                <table class="table table-striped table-bordered">
+                    <thead class="table-success">
+                        <tr>
+                            <th>País</th>
+                            <th>Casos pronosticados</th>
+                            <th>Casos publicados</th>
+                            <th>Error</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>España</td>
+                            <td>141.655</td>
+                            <td>140.510</td>
+                            <td>0.81%</td>
+                        </tr>
+
+                        <tr>
+                            <td>Italia</td>
+                            <td>137.553</td>
+                            <td>135.586</td>
+                            <td>1.45%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

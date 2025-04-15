@@ -2,7 +2,7 @@ Sub GenerateDate()
 '
 ' Description: Macro to generate a calendar for different cities
 ' Author: Isabel Rodenas
-' Email: isabel@isabelrodenas.es
+' Web: https://isabelrodenas.es/
 
     Dim dia As Integer
     Dim mes As String

@@ -2,7 +2,6 @@
 
 Este proyecto es una **plantilla de Excel** que permite calcular de forma automática las horas trabajadas durante un mes, teniendo en cuenta el horario laboral habitual y los días festivos o de vacaciones.
 
----
 
 ## ¿Qué hace?
 
@@ -14,7 +13,6 @@ Este proyecto es una **plantilla de Excel** que permite calcular de forma autom�
 - Muestra el **total de horas trabajadas al mes**.
 - Si ya existe una hoja con el nombre del mes, la elimina para evitar duplicados.
 
----
 
 ## ¿Cómo funciona?
 
@@ -25,7 +23,6 @@ Este proyecto es una **plantilla de Excel** que permite calcular de forma autom�
 5. Automáticamente se creará una hoja con el nombre del mes y todas las fechas laborales del mes.
 6. El sistema identificará los días festivos y calculará las **horas reales trabajadas por jornada**.
 
----
 
 ## ⚠️ Notas importantes
 
@@ -33,15 +30,18 @@ Este proyecto es una **plantilla de Excel** que permite calcular de forma autom�
 - Los días festivos deben indicarse con el número del día del mes, uno por celda.
 - Funciona únicamente con macros habilitadas (asegúrate de habilitar contenido en Excel al abrir el archivo).
 
----
 
 ## Requisitos
 
 - Microsoft Excel con soporte para macros (VBA).
 - Habilitar macros al abrir el archivo `.xlsm`.
 
----
 
 ## Image preview
 ![Preview](https://raw.githubusercontent.com/isromar/excel/main/jornada-laboral/preview.jpg)
 ![Preview](https://raw.githubusercontent.com/isromar/excel/main/jornada-laboral/preview2.jpg)
+
+
+## Contacto
+Para más detalles sobre mi trabajo o proyectos, puedes visitar mi página web:
+[Mi Página Web](isabelrodenas.es)

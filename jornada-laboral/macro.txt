@@ -1,6 +1,6 @@
 Sub CrearTabla()
 ' Autor: Isabel Rodenas
-' Email: isabel@isabelrodenas.es
+' Web: https://isabelrodenas.es/
 ' Fecha: 08/09/2023
 ' Versión: 2
 ' Descripción: Generador de mes con el horario de entrada, de salida, pausa de comida y festivos. Calcula las horas totales trabajadas

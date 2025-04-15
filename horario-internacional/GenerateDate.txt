@@ -1,8 +1,8 @@
 Sub GenerateDate()
 '
 ' Description: Macro to generate a calendar for different cities
-' Author: Isabel Ródenas Marín
-'
+' Author: Isabel Rodenas
+' Email: kaluca06@gmail.com
 
     Dim dia As Integer
     Dim mes As String
@@ -18,34 +18,34 @@ Sub GenerateDate()
     ReDim freeDays(1)
     Dim fechaInicioVerano As Date
     Dim fechaFinVerano As Date
-    
+
     dia = Range("B2").Value
     mes = Range("C2").Value
     anio = Range("D2").Value
-            
+
     ' Validar que los campos Free days no estén vacíos
     If Range("I2").Value = vbNullString Or Range("I3").Value = vbNullString Then
         MsgBox "Free days can't be empty. If there is only one free day, choose the same for both cells"
         Exit Sub
     End If
-    
+
     ' Validar que los campos Working hours no estén vacíos
     If Range("F3").Value = vbNullTime Or Range("G3").Value = vbNullTime Then
         MsgBox "Working hours can't be empty. Please choose some"
         Exit Sub
     End If
-   
+
     ' Validar que los campos de día, mes y año no estén vacíos
     If Not IsNumeric(dia) Or mes = vbNullString Or anio = vbNullNumeric Then
         MsgBox "Please enter the appropriate values for the fields day, month, and year."
         Exit Sub
     End If
-    
+
     ' Toma los días de trabajo de la semana
     freeDays(0) = Range("I2").Value
     freeDays(1) = Range("I3").Value
-        
-        
+
+
     ' Convertir el nombre del mes a número de mes
     Select Case mes
         Case "January"
@@ -73,7 +73,7 @@ Sub GenerateDate()
         Case "December"
             mesNum = 12
     End Select
-    
+
     ' Limpiar color de las celdas
     For Each rango In Range("B11:M34")
         rango.Interior.ColorIndex = xlNone
@@ -81,11 +81,11 @@ Sub GenerateDate()
 
     ' Generar fechas para cada ciudad
     For i = 0 To 23
-    
+
         ' Actual en UTC+0
         fecha = DateSerial(anio, mesNum, dia) + TimeSerial(i, 0, 0)
         Range("A11").Offset(i, 0).Value = Format(fecha, "dddd, d mmmm yyyy, hh:mm")
-        
+
         ' Ciudad de México (UTC-6)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 6, 0, 0)
         fechaInicioVerano = Range("B6").Value
@@ -99,7 +99,7 @@ Sub GenerateDate()
             Range("B9") = "UTC -6"
         End If
         Range("B11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-        
+
         ' Toronto (UTC-5)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 5, 0, 0)
         fechaInicioVerano = Range("C6").Value
@@ -113,7 +113,7 @@ Sub GenerateDate()
             Range("C9") = "UTC -5"
         End If
         Range("C11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-        
+
         ' New York (UTC-5)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 5, 0, 0)
         fechaInicioVerano = Range("D6").Value
@@ -127,7 +127,7 @@ Sub GenerateDate()
             Range("D9") = "UTC -5"
         End If
         Range("D11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-                
+
         ' Sao Paulo (UTC-3)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 3, 0, 0)
         fechaInicioVerano = Range("E6").Value
@@ -141,7 +141,7 @@ Sub GenerateDate()
             Range("E9") = "UTC -3"
         End If
         Range("E11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-        
+
         ' Rio de Janeiro (UTC-3)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i - 3, 0, 0)
         fechaInicioVerano = Range("F6").Value
@@ -155,7 +155,7 @@ Sub GenerateDate()
             Range("F9") = "UTC -3"
         End If
         Range("F11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-        
+
         ' Londres (UTC+0)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i, 0, 0)
         fechaInicioVerano = Range("G6").Value
@@ -169,7 +169,7 @@ Sub GenerateDate()
             Range("G9") = "UTC"
         End If
         Range("G11").Offset(i, 0).Value = Format(fecha, "dddd d, hh:mm")
-                
+
         ' Lisbon (UTC+0)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i, 0, 0)
         fechaInicioVerano = Range("H6").Value
@@ -183,7 +183,7 @@ Sub GenerateDate()
             Range("H9") = "UTC"
         End If
         Range("H11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-                        
+
         ' Madrid (UTC+1)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 1, 0, 0)
         fechaInicioVerano = Range("I6").Value
@@ -197,7 +197,7 @@ Sub GenerateDate()
             Range("I9") = "UTC +1"
         End If
         Range("I11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-        
+
         ' Barcelona (UTC+1)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 1, 0, 0)
         fechaInicioVerano = Range("J6").Value
@@ -211,7 +211,7 @@ Sub GenerateDate()
             Range("J9") = "UTC +1"
         End If
         Range("J11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-        
+
         ' Milán (UTC+1)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 1, 0, 0)
         fechaInicioVerano = Range("K6").Value
@@ -225,7 +225,7 @@ Sub GenerateDate()
             Range("K9") = "UTC +1"
         End If
         Range("K11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-        
+
         ' Copenhague (UTC+1)
         fechaSinDST = DateSerial(anio, mesNum, dia) + TimeSerial(i + 1, 0, 0)
         fechaInicioVerano = Range("L6").Value
@@ -253,23 +253,23 @@ Sub GenerateDate()
             Range("M9") = "UTC +10"
         End If
         Range("M11").Offset(i, 0).Value = Format(fecha, "dddd hh:mm")
-        
+
     Next i
 
         ' Obtener la hora inicial y la hora final de las celdas
         horaInicial = Range("F3").Value
         horaFinal = Range("G3").Value
-        
+
         ' Redimensionar el array para que tenga el tamaño necesario
         ReDim valores(0 To DateDiff("h", horaInicial, horaFinal))
         Range("C4") = valores
-        
+
         ' Agregar las horas al array
         For i = 0 To UBound(valores)
             horaActual = DateAdd("h", i, horaInicial)
             valores(i) = Format(horaActual, "hh:mm")
         Next i
-        
+
         ' Definir el array de valores a buscar
         For Each celda In Range("B11:M34")
             For Each valor In valores
@@ -278,18 +278,18 @@ Sub GenerateDate()
                 End If
             Next valor
         Next celda
-        
+
         Call changeDaysToEnglish("A11:M34")
         Call changeMonthsToEnglish("A11:M34")
         Call changeCellsColor("B11:M34", freeDays)
-                
+
         MsgBox "Calendar generated"
 
 End Sub
 Sub changeCellsColor(rangeCells As String, freeDays() As String)
     Dim celda As Range
     Dim valor As Variant
-    
+
     ' Recorrer el rango de celdas y aplicar el formato condicional
     For Each celda In Range(rangeCells)
         For Each valor In freeDays
@@ -304,7 +304,7 @@ Sub changeDaysToEnglish(rangeCells As String)
     Dim celda As Range
     Dim weekDays() As Variant
     weekDays = Array("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
-    
+
     ' Recorrer el rango de celdas y cambiar los días encontrados
     For Each celda In Range(rangeCells)
         For i = LBound(weekDays) To UBound(weekDays)
@@ -334,7 +334,7 @@ Sub changeMonthsToEnglish(rangeCells As String)
     Dim celda As Range
     Dim monthNames() As Variant
     monthNames = Array("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre")
-    
+
     ' Recorrer el rango de celdas y cambiar los días encontrados
     For Each celda In Range(rangeCells)
         For i = LBound(monthNames) To UBound(monthNames)
@@ -371,7 +371,7 @@ Sub changeMonthsToEnglish(rangeCells As String)
     Next celda
 End Sub
 Function checkIfSummer(fecha, fechaInicioVerano, fechaFinVerano)
-   
+
     ' Verificar si la fecha está dentro del horario de verano
     If fecha >= fechaInicioVerano And fecha < fechaFinVerano Then
         ' Ajustar la hora para el horario de verano (UTC-6)

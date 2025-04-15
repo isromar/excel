@@ -1,0 +1,203 @@
+Sub CrearTabla()
+' Autor: Isabel Rodenas
+' Fecha: 08/09/2023
+' Versión: 2
+' Descripción: Generador de mes con el horario de entrada, de salida, pausa de comida y festivos. Calcula las horas totales trabajadas
+' Email: kaluca06@gmail.com
+
+    Dim Fecha As Date
+    Dim Dia As Integer
+    Dim UltimoDia As Integer
+    Dim HoraEntrada As Date
+    Dim HoraSalida As Date
+
+    ' Verificar si las celdas A2 y B2 están vacías
+    If IsEmpty(Sheets("Datos").Range("A2").Value) Or IsEmpty(Sheets("Datos").Range("B2").Value) Then
+        MsgBox "Completa los campos necesarios"
+        Exit Sub ' Salir del subprocedimiento si las celdas están vacías
+    End If
+
+    'Obtener la fecha del mes y año de las celdas A2 y B2 de la hoja "Datos"
+    Fecha = DateSerial(Sheets("Datos").Range("A2").Value, Sheets("Datos").Range("B2").Value, 1)
+
+    'Borrar la hoja si ya existe
+    If WorksheetExists(Format(Fecha, "mmmm")) Then
+        Application.DisplayAlerts = False
+        Sheets(Format(Fecha, "mmmm")).Delete
+        Application.DisplayAlerts = True
+    End If
+
+    'Crear una nueva hoja con el nombre del mes en letras
+    Sheets.Add(After:=Sheets(Sheets.Count)).Name = Format(Fecha, "mmmm")
+
+    'Activar la hoja recién creada
+    Sheets(Format(Fecha, "mmmm")).Activate
+
+    'Obtener el último día del mes
+    UltimoDia = Day(DateSerial(Year(Fecha), Month(Fecha) + 1, 0))
+
+    'Insertar las cabeceras en las celdas
+    Range("A1:E1").Merge ' Combinar las celdas de A1 a E1
+    Range("A1").Value = "TRABAJADOR:"
+    Range("A2").Value = "MES: " & Format(Fecha, "mmmm yyyy")
+    Range("A3").Value = "FECHA DE JORNADA LABORAL"
+    Range("B3").Value = "DIA"
+    Range("C3").Value = "HORA DE ENTRADA"
+    Range("D3").Value = "HORA DE SALIDA"
+    Range("E3").Value = "HORAS TRABAJADAS"
+    Range("A1:E3").Font.Bold = True
+
+    'Insertar los días laborables del mes en la primera columna de la tabla
+    For Dia = 1 To UltimoDia
+        'Determinar si el día es sábado o domingo
+        If Weekday(DateSerial(Year(Fecha), Month(Fecha), Dia), vbSunday) <> 1 And Weekday(DateSerial(Year(Fecha), Month(Fecha), Dia), vbSunday) <> 7 Then
+            'Cells(Dia + 3, 1).Value = Format(DateSerial(Year(Fecha), Month(Fecha), Dia))
+            Cells(Dia + 3, 1).Value = WorksheetFunction.Text(Format(DateSerial(Year(Fecha), Month(Fecha), Dia), "dd/mm/yyyy"), "dd/mm/yyyy")
+            Cells(Dia + 3, 1).NumberFormat = "dd/mm/yyyy"
+
+            'Obtener el día de la semana correspondiente a la fecha en español y convertir la primera letra en mayúscula
+            Dim diaSemana As String
+            diaSemana = WorksheetFunction.Text(DateSerial(Year(Fecha), Month(Fecha), Dia), "[$-es-ES]dddd")
+            diaSemana = StrConv(Left(diaSemana, 1), vbUpperCase) & Mid(diaSemana, 2)
+            Cells(Dia + 3, 2).Value = diaSemana
+
+            'Buscar la hora de entrada y salida correspondiente al día de la semana en la tabla de la hoja "Datos"
+            HoraEntrada = Application.VLookup(Cells(Dia + 3, 2).Value, Sheets("Datos").Range("D2:F6"), 2, False)
+            HoraSalida = Application.VLookup(Cells(Dia + 3, 2).Value, Sheets("Datos").Range("D2:F6"), 3, False)
+
+            'Insertar la hora de entrada y salida en las columnas correspondientes
+            Cells(Dia + 3, 3).Value = Format(HoraEntrada, "hh:mm")
+            Cells(Dia + 3, 4).Value = Format(HoraSalida, "hh:mm")
+
+            ' Calcular las horas trabajadas
+
+            'Buscar la pausa para comer correspondiente al día de la semana en la tabla de la hoja "Datos"
+            PausaComer = Application.VLookup(Cells(Dia + 3, 2).Value, Sheets("Datos").Range("D2:G6"), 4, False)
+            PausaComer = Replace(PausaComer, ",", ".")
+
+            ' Calcular las horas trabajadas restando la pausa para comer
+            Cells(Dia + 3, 5).Formula = "=(D" & Dia + 3 & "-C" & Dia + 3 & ")-TIME(" & PausaComer & ",0,0)"
+
+            ' Establecer el formato de color de la fila correspondiente al viernes
+            If diaSemana = "Viernes" Then
+                Range(Cells(Dia + 3, 1), Cells(Dia + 3, 5)).Interior.Color = RGB(211, 211, 211) ' Gris claro
+            End If
+        End If
+    Next Dia
+
+    Call PonerFestivoFecha(Format(Fecha, "mm"), Format(Fecha, "yyyy"), Format(Fecha, "mmmm"))
+
+    Call EliminarFilasVacias
+
+    Call FormatearCeldas
+
+    Call CalcularHorasTotales(Format(Fecha, "mmmm"))
+
+End Sub
+
+Sub EliminarFilasVacias()
+    Dim rango As Range
+    Set rango = Range("A3:A34")
+    rango.SpecialCells(xlCellTypeBlanks).EntireRow.Delete
+End Sub
+
+Sub PonerFestivoFecha(mesNumero, anyo, mesLetra)
+    Dim ListaNumeros As Range
+    Dim RangoBusqueda As Range
+    Dim Celda As Range
+    Dim RangoFechas As Range
+    Dim Dia As Integer
+
+    ' Establecer el rango de fechas en la columna A de la hoja "Datos"
+    Set RangoFechas = Sheets("Datos").Range("A5:A18")
+
+    ' Filtrar las celdas no vacías en el rango
+    On Error Resume Next
+    Set ListaNumeros = RangoFechas.SpecialCells(xlCellTypeConstants)
+    On Error GoTo 0
+
+    ' Verificar si el rango contiene celdas no vacías
+    If ListaNumeros Is Nothing Then
+        MsgBox "No hay festivos este mes."
+    ElseIf ListaNumeros.Count = 0 Then
+        MsgBox "No hay festivos este mes."
+    Else
+        ' Establecer el rango de búsqueda
+        Set RangoBusqueda = Sheets(mesLetra).Range("A4:A34")
+
+        ' Recorrer el rango de números
+        For Each Celda In RangoBusqueda
+            ' Obtener la fecha correspondiente al número
+            Dia = Day(Celda.Value)
+
+            ' Verificar si el día está en el rango de fechas
+            If WorksheetFunction.CountIf(RangoFechas, Dia) > 0 Then
+                ' Escribir "Festivo" en la columna E de la fila encontrada
+                Celda.Offset(0, 4).Value = "Festivo"
+                Celda.Offset(0, 4).HorizontalAlignment = xlRight
+                ' Vaciar el contenido de las celdas C3 y D3
+                Celda.Offset(0, 2).ClearContents
+                Celda.Offset(0, 3).ClearContents
+
+            End If
+        Next Celda
+    End If
+End Sub
+
+Function WorksheetExists(sheetName As String) As Boolean
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets(sheetName)
+    WorksheetExists = Not ws Is Nothing
+    On Error GoTo 0
+End Function
+
+Sub CalcularHorasTotales(NombreHoja)
+    ' Encontrar la última fila con texto en la columna A
+    Dim UltimaFila As Long
+    Dim rangoHoras As Range
+    UltimaFila = Sheets(NombreHoja).Range("A" & Rows.Count).End(xlUp).Row
+
+    ' Desplazarse tres filas más abajo y tres columnas más a la derecha
+    Dim CeldaTotalHoras As Range
+    Set CeldaTotalHoras = Sheets(NombreHoja).Cells(UltimaFila + 3, 4)
+
+    'Encuentra el rango para sumar
+    Set rangoHoras = Range("E4:E" & Range("E" & Rows.Count).End(xlUp).Row) ' Rango de celdas que contienen las horas a sumar
+
+    ' Escribir el texto "TOTAL HORAS:"
+    CeldaTotalHoras.Value = "TOTAL HORAS:"
+
+    'Calcula el total de horas
+    CeldaTotalHoras.Offset(0, 1).Formula = "=SUM(" & rangoHoras.Address & ")"
+
+    'CeldaTotalHoras.Offset(0, 1).Value = totalHoras
+    CeldaTotalHoras.Offset(0, 1).NumberFormat = "[h]:mm:ss" ' Aplica el formato [h]:mm:ss a la celda
+
+    ' Aplicar formato de color a las celdas
+    CeldaTotalHoras.Resize(1, 2).Interior.Color = RGB(255, 255, 0) ' Fondo amarillo
+    CeldaTotalHoras.Resize(1, 2).Font.Bold = True ' Texto en negrita
+End Sub
+Sub FormatearCeldas()
+    ' Aplicar formato de hora a las columnas C, D y E
+    Range("C:C").NumberFormat = "hh:mm:ss"
+    Range("D:D").NumberFormat = "hh:mm:ss"
+    Range("E:E").NumberFormat = "h:mm"
+
+    ' Ajustar el ancho de las columnas
+    Columns("A:B").ColumnWidth = 26 ' Ancho de 26 pixels
+    Columns("C:E").ColumnWidth = 21 ' Ancho de 21 pixels
+
+   ' Centrar el texto en todas las columnas
+    Range("A3:E26").HorizontalAlignment = xlCenter
+
+    ' Aplicar formato de color a las cabeceras
+    Range("A3:E3").Font.Color = RGB(255, 255, 255) ' Color de letra blanco
+    Range("A3:E3").Interior.Color = RGB(0, 0, 128) ' Color de fondo azul marino
+
+    ' Aplicar formato de color a la columna "HORA DE ENTRADA"
+    Range("C3").Interior.Color = RGB(150, 200, 100) ' Color de fondo verde claro
+
+    ' Aplicar formato de color a la columna "HORA DE SALIDA"
+    Range("D3").Interior.Color = RGB(0, 216, 240) ' Color de fondo azul claro
+End Sub
